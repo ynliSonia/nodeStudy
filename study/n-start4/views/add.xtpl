@@ -1,0 +1,18 @@
+{{ extend ("./layout") }}
+
+{{#block ("body")}}
+
+	<h3>Add new one</h3>
+    <form action="/addItem" method="post">
+       <p>
+            名称：<input type="text" id="J_name" name="name" value="" />
+        </p>    
+        <p>
+            描述：<textarea name="desc"></textarea>
+        </p>
+        <p>
+            <input type="submit" id="J_btn" value="添加" />
+        </p>
+    </form>
+    
+{{/block}}
