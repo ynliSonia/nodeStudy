@@ -1,0 +1,25 @@
+{{ extend ("./layout") }}
+
+{{#block ("body")}}
+	
+	<h3>To Do List</h3>
+
+	<a href="./new">新增</a>
+
+	<div>
+		<p>
+			<span>任务名称</span>
+			<span>描述</span>
+			<span>创建时间</span>
+		</p>
+		{{#each(list)}}
+		<p>
+			<span>{{this.name}}</span>
+			<span>{{this.desc}}</span>
+			<span>{{this.times}}</span>
+			<span><a href="./del/{{this.id}}" class="J_del">删除</a></span>
+		</p>
+		{{/each}}
+	</div>
+
+{{/block}}
