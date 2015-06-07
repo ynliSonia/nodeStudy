@@ -1,1 +1,0 @@
-$(document).delegate(".J_del","click",function(e){e.preventDefault();var t=$(e.target),a=t.attr("href");$.ajax({url:a,type:"delete",data:{},dataType:"json",success:function(e){1==e.status?window.location.reload():alert("删除失败，删除的任务不存在或已经被删除")}})});

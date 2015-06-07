@@ -27,9 +27,8 @@ var minify = require('gulp-minify-css');
 var less = require('gulp-less');
 
 // 资源地址
-
-var SRC_BASE = './statics/src';
-var BUILD_BASE = './statics/build';
+var SRC_BASE = './src';
+var BUILD_BASE = './build';
 
 var SCRIPTS = SRC_BASE + '/p/*/index.js';
 
@@ -51,56 +50,56 @@ gulp.task('clean', function() {
 // });
 
 // js 打包
-gulp.task('script', function() {
+// gulp.task('script', function() {
 
-	gulp.src(SRC_BASE + '/**/*.js')
-		.pipe(babel())
-		.pipe(uglify())
-		.pipe(gulp.dest(BUILD_BASE));
-});
+// 	gulp.src(SRC_BASE + '/**/*.js')
+// 		.pipe(babel())
+// 		.pipe(uglify())
+// 		.pipe(gulp.dest(BUILD_BASE));
+// });
 
 // js 打包 browserify 版
 gulp.task('js', function() {
 
 	var isError = false;
 
-	globby([SCRIPTS], function(err, filePaths) {
+	// globby([SCRIPTS], function(err, filePaths) {
 
-		if(err) {
-			gutil.log('globby error');
-			return ;
-		}
+	// 	if(err) {
+	// 		gutil.log('globby error');
+	// 		return ;
+	// 	}
 
 		// 打包压缩文件到 build
-		
-            
 		// browserify 一次只能接受一个文件
-		filePaths.forEach(function(filePath) {
+		// filePaths.forEach(function(filePath) {
 		
-			var pageNameReg = new RegExp(SRC_BASE + '\/p\/(.*)\/');
-	        var pageName = filePath.match(pageNameReg)[1];
+			// var pageNameReg = new RegExp(SRC_BASE + '\/p\/(.*)\/');
+	  //       var pageName = filePath.match(pageNameReg)[1];
 
-			browserify(filePath)
-				.transform(reactify)
-				.bundle()
-				.on('error', function(err) {
+	  browserify(SRC_BASE + '/app.js')
+		  .transform(reactify)
+		  .bundle()
+		  .on('error', function(err) {
 
-					if(!isError) {
-						gutil.log(err);
-						isError = true;
-					}
-				})
-				.pipe(source('index.js'))
-				.pipe(streamify(babel()))
-				.pipe(gulp.dest(BUILD_BASE + '/p/' + pageName))
-				.pipe(buffer())
-				.pipe(uglify())
-				.pipe(rename({
-					suffix: '.min'
-				}))
-				.pipe(gulp.dest(BUILD_BASE + '/p/' + pageName))
-		})
-	});
+		  	gutil.log(err);
+						// if(!isError) {
+						// 	gutil.log(err);
+						// 	isError = true;
+						// }
+					})
+		  .pipe(source('app.js'))
+		  .pipe(streamify(babel()))
+		  .pipe(gulp.dest(BUILD_BASE))
+		  .pipe(buffer())
+		  .pipe(uglify())
+		  .pipe(rename({
+		  	suffix: '.min'
+		  }))
+		  .pipe(gulp.dest(BUILD_BASE))
+				// .pipe(livereload())
+		// })
+	// });
 });
 
 // less编译 及 打包
@@ -114,9 +113,10 @@ gulp.task('less', function() {
     		}))
 		.pipe(minify())
 		.on('error', function(err) {
-			gutil.log(err);
+			gutil.log('less error');
 		})
-		.pipe(gulp.dest(BUILD_BASE));
+		.pipe(gulp.dest(BUILD_BASE))
+		// .pipe(connect.reload())
 
 });
 
@@ -128,21 +128,26 @@ gulp.task('lib', function() {
 });
 
 // dev
-// gulp.task('dev', function() {
+gulp.task('dev:server', function() {
+    connect.server({
+        root: './',
+        port: 8181,
+        livereload: true
+    });
+});
 
-// 	connect.server({
-// 		root: '.',
-// 		port: 8181,
-// 		livereload: true
-// 	});
-// });
+gulp.task('dev', [
+    'dev:server',
+    'watch'
+]);
 
 // watch
 gulp.task('watch', function() {
 
 	gulp.watch(SRC_BASE + '/**/*', ['default']);
 	
+	
 });
 
-gulp.task('default', ['js', 'less', 'watch']);
+gulp.task('default', ['js', 'less']);
 

@@ -7,6 +7,7 @@
         <link type="text/css" href="/assets/css/index.css" rev="stylesheet" rel="stylesheet"/>
         <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
         <script src="/assets/script/index.js"></script>
+        <script src="/build/p/home/index.js"></script>
     </head>
     <body>
         {{{block ("body")}}}
